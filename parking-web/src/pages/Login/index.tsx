@@ -49,14 +49,36 @@ const Login = () => {
                         remember: true,
                       }}
                     >
-                      <Form.Item label="Email" name="email">
+                      <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your email!",
+                          },
+                        ]}
+                      >
                         <Input
                           size="large"
                           placeholder="Email"
                           prefix={<UserOutlined style={{ color: "#3e79f7" }} />}
                         ></Input>
                       </Form.Item>
-                      <Form.Item label="Password" name="password">
+                      <Form.Item
+                        label="Password"
+                        name="password"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your password!",
+                          },
+                          {
+                            min: 6,
+                            message: "Password must be minimum 6 characters.",
+                          },
+                        ]}
+                      >
                         <Input.Password
                           size="large"
                           placeholder="Password"

@@ -1,8 +1,8 @@
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
-import styles from "./index.module.less";
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Button, Card, Col, Form, Input, Row, notification } from "antd";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./index.module.less";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -10,22 +10,43 @@ const Login = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const goToSignUpPage = () => {
-    navigate("/sign-up");
+  const handleLogin = () => {
+    setIsLoading(true);
+    const { email, password } = form.getFieldsValue();
+    fetch("http://localhost:8088/api/merchant/company/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((res) => {
+        localStorage.setItem("COMPANY_ID", res.data?.id);
+        console.log(res.data);
+        setIsSuccess(true);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({ message: "Incorrect email or password" });
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/parking-lot");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess]);
 
-  const handleLogin = () => {
-    setIsLoading(true);
-    // :TODO implement login
-    setIsSuccess(true);
-
-    setIsLoading(false);
+  const goToSignUpPage = () => {
+    navigate("/sign-up");
   };
 
   return (
@@ -52,12 +73,7 @@ const Login = () => {
                       <Form.Item
                         label="Email"
                         name="email"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input your email!",
-                          },
-                        ]}
+                        rules={[{ required: true, message: "Please input your email!" }]}
                       >
                         <Input
                           size="large"
@@ -69,14 +85,8 @@ const Login = () => {
                         label="Password"
                         name="password"
                         rules={[
-                          {
-                            required: true,
-                            message: "Please input your password!",
-                          },
-                          {
-                            min: 6,
-                            message: "Password must be minimum 6 characters.",
-                          },
+                          { required: true, message: "Please input your password!" },
+                          { min: 6, message: "Password must be minimum 6 characters." },
                         ]}
                       >
                         <Input.Password

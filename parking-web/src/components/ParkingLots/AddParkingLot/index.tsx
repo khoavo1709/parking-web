@@ -5,6 +5,7 @@ import styles from "./index.module.less";
 import ParkingLotsForm from "./AddParkingLotsForm";
 import { parkingLotApi } from "@/api";
 import AddBlockForm from "./AddBlockForm";
+import TimeFrameForm from "./AddTimeFrameForm";
 
 const { Step } = Steps;
 interface IProps {
@@ -124,6 +125,11 @@ const AddParkingLot = (props: IProps) => {
           form={blocksForm}
           parkingLot={parkingLot}
           isVisible={current == 1}
+        />
+        <TimeFrameForm
+          form={timeFramesForm}
+          parkingLot={parkingLot}
+          isVisible={current == 2}
         />
         {current == 3 && (
           <div className=" text-xl text-center">

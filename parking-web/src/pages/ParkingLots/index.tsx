@@ -1,3 +1,4 @@
+import AddParkingLot from "@/components/ParkingLots/AddParkingLot";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
 import { selectParkingLot } from "@/store/selectors";
@@ -11,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
   const parkingLotState = useAppSelector(selectParkingLot);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [idParkingLot, setIdParkingLot] = useState<string>();
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>(
     parkingLotState.parkingLots,
   );
@@ -122,6 +125,14 @@ const ParkingLots: FC = () => {
           </Col>
         </Row>
       </Card>
+
+      <AddParkingLot
+        parkingLotId={idParkingLot}
+        isVisible={isVisible}
+        onCancel={() => {
+          setIsVisible(false), setIdParkingLot("");
+        }}
+      />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { LockTwoTone, UserOutlined } from "@ant-design/icons";
+import logo from "@/assets/images/logo.png";
 import { Button, Card, Col, Form, Input, Row, notification } from "antd";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -57,7 +58,10 @@ const Login = () => {
             <Card>
               <div style={{ margin: "1.5rem 0" }}>
                 <div style={{ textAlign: "center" }}>
-                  <p>Welcom to Parking merchant!</p>
+                  <img src={logo} style={{ height: "5rem" }} />
+                  <p style={{ fontWeight: "bold" }}>
+                    Welcom to Parking merchant!
+                  </p>
                 </div>
                 <Row justify="center">
                   <Col span={24}></Col>
@@ -73,7 +77,12 @@ const Login = () => {
                       <Form.Item
                         label="Email"
                         name="email"
-                        rules={[{ required: true, message: "Please input your email!" }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your email!",
+                          },
+                        ]}
                       >
                         <Input
                           size="large"
@@ -85,8 +94,14 @@ const Login = () => {
                         label="Password"
                         name="password"
                         rules={[
-                          { required: true, message: "Please input your password!" },
-                          { min: 6, message: "Password must be minimum 6 characters." },
+                          {
+                            required: true,
+                            message: "Please input your password!",
+                          },
+                          {
+                            min: 6,
+                            message: "Password must be minimum 6 characters.",
+                          },
                         ]}
                       >
                         <Input.Password

@@ -2,6 +2,8 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Button, Form, Modal, Steps } from "antd";
 import { useEffect, useState } from "react";
 import styles from "./index.module.less";
+import ParkingLotsForm from "./AddParkingLotsForm";
+import { parkingLotApi } from "@/api";
 
 const { Step } = Steps;
 interface IProps {
@@ -15,6 +17,9 @@ const AddParkingLot = (props: IProps) => {
   const [blocksForm] = Form.useForm();
   const [timeFramesForm] = Form.useForm();
   const [current, setCurrent] = useState(0);
+  const [parkingLot, setParkingLot] = useState<ParkingLot | null>(null);
+  const [lotForm] = Form.useForm();
+
   const steps = [
     {
       title: `${props.parkingLotId ? "Change paring lot" : "Add parking lot"}`,
@@ -36,7 +41,14 @@ const AddParkingLot = (props: IProps) => {
 
   useEffect(() => {
     if (props.parkingLotId) {
-      // fetch parking lot by id
+      parkingLotApi
+        .getOne(props.parkingLotId)
+        .then((res) => {
+          setParkingLot(res.data.data as ParkingLot);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [props.parkingLotId]);
 
@@ -97,6 +109,16 @@ const AddParkingLot = (props: IProps) => {
             />
           ))}
         </Steps>
+        <ParkingLotsForm
+          parkingLot={parkingLot}
+          form={lotForm}
+          isVisible={current == 0}
+          map={
+            <div className="w-full aspect-[2] mb-8">
+              <div>This is a map</div>
+            </div>
+          }
+        />
         {current == 3 && (
           <div className=" text-xl text-center">
             <QuestionCircleOutlined

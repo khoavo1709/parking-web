@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./index.module.less";
 import ParkingLotsForm from "./AddParkingLotsForm";
 import { parkingLotApi } from "@/api";
+import AddBlockForm from "./AddBlockForm";
 
 const { Step } = Steps;
 interface IProps {
@@ -118,6 +119,11 @@ const AddParkingLot = (props: IProps) => {
               <div>This is a map</div>
             </div>
           }
+        />
+        <AddBlockForm
+          form={blocksForm}
+          parkingLot={parkingLot}
+          isVisible={current == 1}
         />
         {current == 3 && (
           <div className=" text-xl text-center">

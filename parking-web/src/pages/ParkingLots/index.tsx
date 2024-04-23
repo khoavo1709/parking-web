@@ -1,12 +1,20 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
+import { selectParkingLot } from "@/store/selectors";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/lib/input/Search";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
+  const parkingLotState = useAppSelector(selectParkingLot);
+  const [dataSource, setDataSource] = useState<Array<ParkingLot>>(
+    parkingLotState.parkingLots,
+  );
+  const dispatch = useAppDispatch();
 
   const columns: ColumnsType<ParkingLot> = [
     {
@@ -48,7 +56,14 @@ const ParkingLots: FC = () => {
               />
             </Tooltip>
             <Tooltip title="Edit">
-              <Button type="default" icon={<EditOutlined />} />
+              <Button
+                type="default"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setIsVisible(true);
+                  setIdParkingLot(id);
+                }}
+              />
             </Tooltip>
             {parkingLot.isDeleted ? null : (
               <Tooltip title="Delete">
@@ -66,6 +81,15 @@ const ParkingLots: FC = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    const idCompany = localStorage.getItem("COMPANY_ID");
+    dispatch(parkingLotActions.getAllParkingLots(idCompany));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setDataSource(parkingLotState.parkingLots);
+  }, [parkingLotState.parkingLots]);
 
   return (
     <div>
@@ -88,7 +112,13 @@ const ParkingLots: FC = () => {
             </Button>
           </Col>
           <Col span={24}>
-            <Table<ParkingLot> bordered columns={columns} />
+            <Table<ParkingLot>
+              bordered
+              dataSource={dataSource}
+              columns={columns}
+              loading={parkingLotState.loading}
+              rowKey={(row) => row.id!}
+            />
           </Col>
         </Row>
       </Card>

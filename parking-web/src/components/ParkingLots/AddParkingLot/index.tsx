@@ -1,11 +1,14 @@
+import { blockApi, parkingLotApi, timeFrameApi } from "@/api";
+import { useAppDispatch } from "@/store/hooks";
+import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Button, Form, Modal, Steps } from "antd";
+import { Button, Form, message, Modal, Steps } from "antd";
+import moment from "moment";
 import { useEffect, useState } from "react";
-import styles from "./index.module.less";
-import ParkingLotsForm from "./AddParkingLotsForm";
-import { parkingLotApi } from "@/api";
 import AddBlockForm from "./AddBlockForm";
+import ParkingLotsForm from "./AddParkingLotsForm";
 import TimeFrameForm from "./AddTimeFrameForm";
+import styles from "./index.module.less";
 
 const { Step } = Steps;
 interface IProps {
@@ -14,14 +17,21 @@ interface IProps {
   onCancel: Function;
 }
 
+type parkingLotData = {
+  parkingLot?: any;
+  blocks?: any;
+  timeFrames?: any;
+};
+
 const AddParkingLot = (props: IProps) => {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [lotForm] = Form.useForm();
   const [blocksForm] = Form.useForm();
   const [timeFramesForm] = Form.useForm();
   const [current, setCurrent] = useState(0);
+  const [data, setData] = useState<parkingLotData>({});
   const [parkingLot, setParkingLot] = useState<ParkingLot | null>(null);
-  const [lotForm] = Form.useForm();
-
   const steps = [
     {
       title: `${props.parkingLotId ? "Change paring lot" : "Add parking lot"}`,
@@ -80,12 +90,18 @@ const AddParkingLot = (props: IProps) => {
         });
       } else if (current == 1 && blocksForm.getFieldValue("blocks")) {
         blocksForm.validateFields().then(() => {
-          setData((old) => ({ ...old, blocks: blocksForm.getFieldValue("blocks") }));
+          setData((old) => ({
+            ...old,
+            blocks: blocksForm.getFieldValue("blocks"),
+          }));
           next();
         });
       } else if (current == 2 && timeFramesForm.getFieldValue("timeFrames")) {
         timeFramesForm.validateFields().then(() => {
-          setData((old) => ({ ...old, timeFrames: timeFramesForm.getFieldValue("timeFrames") }));
+          setData((old) => ({
+            ...old,
+            timeFrames: timeFramesForm.getFieldValue("timeFrames"),
+          }));
           next();
         });
       } else if (current == 3) {
@@ -156,11 +172,164 @@ const AddParkingLot = (props: IProps) => {
     reset();
   };
 
-  const handleUpdate = async () => {};
+  const handleUpdate = async () => {
+    try {
+      parkingLotApi
+        .update(parkingLot!.id!, {
+          ...data.parkingLot,
+          blocks: data.blocks,
+          timeFrames: data.timeFrames,
+        })
+        .then((res) => {
+          if (res.status >= 200 && res.status <= 299) {
+            dispatch(parkingLotActions.getAllParkingLots(props.parkingLotId));
+            message.success(
+              "You have successfully updated a this parking lot.",
+            );
+            setIsLoading(false);
+            props.onCancel();
+            reset();
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.error(
+              "Server error:",
+              error.response.status,
+              error.response.data,
+            );
+            message.error(
+              "An error occurred while updating the parking lot. Please try again later.",
+            );
+          } else if (error.request) {
+            console.error("Request error:", error.request);
+            message.error(
+              "There was a network error. Please check your connection and try again.",
+            );
+          } else {
+            console.error("Error:", error.message);
+            message.error(
+              "An unexpected error occurred. Please try again later.",
+            );
+          }
+        });
+    } catch (e) {
+      console.error("Unexpected error:", e);
+    }
+  };
 
   const reset = () => {
+    lotForm.resetFields();
+    blocksForm.resetFields();
+    timeFramesForm.resetFields();
     setCurrent(0);
   };
+
+  // const handleUpdate = async (id: string) => {
+  // setIsLoading(true);
+  // try {
+  //   const data = form.getFieldValue;
+  //   if (current == 0) {
+  //     //load block, when click next
+  //     const blocks = form.getFieldValue("blocks");
+  //     if (!blocks) {
+  //       const res = await blockApi.getAll(props.editData?.idParkingLot);
+  //       if (res.data.data) {
+  //         const blocks = res.data.data.map((e: Block) => {
+  //           return {
+  //             blockCode: e.blockCode,
+  //             from: e.ParkingSlots[0].slotNumber,
+  //             to: e.ParkingSlots[e.ParkingSlots.length - 1].slotNumber,
+  //           };
+  //         });
+  //         form.setFieldsValue({ blocks });
+  //       }
+  //     }
+  //     setCurrent(current + 1);
+  //   } else if (current == 1 && data("blocks").length > 0) {
+  //     //load timeframe, when click next
+  //     const durations = form.getFieldValue("durations");
+  //     if (!durations) {
+  //       const res = await timeFrameApi.getAll(props.editData?.idParkingLot);
+  //       if (res.data.data) {
+  //         const durations = res.data.data.map((e: TimeFrame) => {
+  //           return {
+  //             time: e.duration,
+  //             price: e.cost,
+  //           };
+  //         });
+  //         form.setFieldsValue({ durations });
+  //       }
+  //     }
+  //     setCurrent(current + 1);
+  //   } else if (current == 2 && data("durations").length > 0) {
+  //     setCurrent(current + 1);
+  //   } else if (current == 3) {
+  //     const parkingLot: ParkingLot = {
+  //       name: data("name"),
+  //       address: data("address"),
+  //       description: data("description") ?? "",
+  //       long: data("long"),
+  //       lat: data("lat"),
+  //       idParkingLot: props.editData?.idParkingLot ?? "",
+  //       isDeleted: false,
+  //       idCompany: authState.auth?.idCompany ?? "",
+  //     };
+  //     //update parking lot
+  //     const isUpdated = await dispatch(parkingLotActions.updateParkingLot(parkingLot)).unwrap();
+  //
+  //     if (!isUpdated) {
+  //       setIsLoading(false);
+  //       message.error("You have failed. Please try again");
+  //     }
+  //
+  //     //update block and slot
+  //     const blocks = data("blocks").map((e: any) => {
+  //       return {
+  //         ...e,
+  //         numOfSlot: e.to - e.from + 1,
+  //         idParkingLot: props.editData?.idParkingLot,
+  //       };
+  //     });
+  //     const res = await blockApi.update(props.editData?.idParkingLot, blocks);
+  //     if (!res.data.data) {
+  //       message.error("You have failed. Please try again");
+  //     }
+  //     //update time frame
+  //     const timeFrames = data("durations").map((e: any) => {
+  //       return {
+  //         duration: e.time,
+  //         cost: e.price,
+  //         idParkingLot: props.editData?.idParkingLot,
+  //       };
+  //     });
+  //
+  //     const updatedTimeFrames = await timeFrameApi.update(
+  //       props.editData?.idParkingLot,
+  //       timeFrames,
+  //     );
+  //     if (updatedTimeFrames.data.data) {
+  //       message.success("You have successfully updated this parking lot.");
+  //     } else {
+  //       message.error("You have failed. Please try again");
+  //     }
+  //     setIsLoading(false);
+  //     props.onCancel();
+  //     form.resetFields();
+  //     setCurrent(0);
+  //   }
+  // } catch (error) {
+  //   message.error(`${error}`);
+  // }
+  // setIsLoading(false);
+  //
+  //   setIsLoading(false);
+  //   props.onCancel();
+  //   reset();
+  //
+  //   dispatch(parkingLotActions.getAllParkingLots(id));
+  // };
+
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -197,11 +366,7 @@ const AddParkingLot = (props: IProps) => {
           parkingLot={parkingLot}
           form={lotForm}
           isVisible={current == 0}
-          map={
-            <div className="w-full aspect-[2] mb-8">
-              <div>This is a map</div>
-            </div>
-          }
+          map={<div className="w-full aspect-[2] mb-8">this is a map</div>}
         />
         <AddBlockForm
           form={blocksForm}

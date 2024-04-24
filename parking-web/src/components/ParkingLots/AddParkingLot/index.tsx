@@ -56,23 +56,55 @@ const AddParkingLot = (props: IProps) => {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    if (current == 0) {
-      next();
-    } else if (current == 1 && blocksForm.getFieldValue("blocks")) {
-      next();
-    } else if (current == 2 && timeFramesForm.getFieldValue("timeFrames")) {
-      next();
-    } else if (current == 3) {
-      if (!props.parkingLotId) {
-        handleAdd();
-      } else {
-        handleUpdate();
+    try {
+      if (current == 0) {
+        lotForm.validateFields().then(() => {
+          const idCompany = localStorage.getItem("COMPANY_ID");
+          let { name, address, lat, long, description, startTime, endTime } =
+            lotForm.getFieldsValue();
+          startTime = moment(startTime).subtract(20, "hours");
+          endTime = moment(endTime).subtract(20, "hours");
+          const parkingLot = {
+            name,
+            address,
+            lat: parseFloat(lat),
+            long: parseFloat(long),
+            description,
+            startTime,
+            endTime,
+            companyID: idCompany,
+          };
+
+          setData((old) => ({ ...old, parkingLot: parkingLot }));
+          next();
+        });
+      } else if (current == 1 && blocksForm.getFieldValue("blocks")) {
+        blocksForm.validateFields().then(() => {
+          setData((old) => ({ ...old, blocks: blocksForm.getFieldValue("blocks") }));
+          next();
+        });
+      } else if (current == 2 && timeFramesForm.getFieldValue("timeFrames")) {
+        timeFramesForm.validateFields().then(() => {
+          setData((old) => ({ ...old, timeFrames: timeFramesForm.getFieldValue("timeFrames") }));
+          next();
+        });
+      } else if (current == 3) {
+        if (!props.parkingLotId) {
+          handleAdd();
+        } else {
+          handleUpdate();
+        }
       }
+    } catch (error) {
+      // message.error(`${error}`);
+      message.error(JSON.stringify(error));
     }
     setIsLoading(false);
   };
 
-  const handleAdd = async () => {};
+  const handleAdd = async () => {
+    console.log(data.parkingLot);
+  };
 
   const handleUpdate = async () => {};
 

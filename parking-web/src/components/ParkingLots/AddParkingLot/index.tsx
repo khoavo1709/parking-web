@@ -104,6 +104,56 @@ const AddParkingLot = (props: IProps) => {
 
   const handleAdd = async () => {
     console.log(data.parkingLot);
+    const newParkingLot = await dispatch(
+      parkingLotActions.createParkingLot(data.parkingLot),
+    ).unwrap();
+
+    if (!newParkingLot) {
+      setIsLoading(false);
+      message.error("You have failed. Please try again");
+    }
+
+    //add block and slot
+    const blocks = data.blocks.map((b: any) => {
+      return {
+        code: b.code,
+        slot: b.slot,
+        parking_lot_id: newParkingLot.id,
+      };
+    });
+
+    try {
+      blocks.forEach((b: any) => {
+        blockApi.create(b);
+      });
+    } catch (e) {
+      console.log(e);
+      message.error("You have failed. Please try again");
+    }
+
+    const timeFrames = data.timeFrames.map((t: any) => {
+      return {
+        duration: t.duration,
+        cost: t.cost,
+        parkingLotId: newParkingLot.id,
+      };
+    });
+    console.log(timeFrames);
+
+    try {
+      timeFrames.forEach((t: any) => {
+        timeFrameApi.create(t);
+      });
+    } catch (e) {
+      console.log(e);
+      message.error("You have failed. Please try again");
+    }
+
+    message.success("You have successfully added a new parking lot.");
+    dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
+    setIsLoading(false);
+    props.onCancel();
+    reset();
   };
 
   const handleUpdate = async () => {};

@@ -4,7 +4,7 @@ import {
   deleteParkingLot,
   getAllParkingLots,
   updateParkingLot,
-} from "@/store/actions/parkingLotActions";
+} from "@/store/actions/parkingLotAction";
 
 export type ParkingLotState = {
   parkingLots: Array<ParkingLot>;

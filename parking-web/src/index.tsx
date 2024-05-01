@@ -7,15 +7,18 @@ import { createRoot } from "react-dom/client";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { APIProvider } from "@vis.gl/react-google-maps";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 createRoot(document.getElementById("root")!).render(
-  <ConfigProvider locale={enUS}>
-    <Provider store={store}>
-      <BrowserRouter>
-        <APIProvider apiKey={import.meta.env.VITE_MAP_API_KEY}>
-          <App />
-        </APIProvider>
-      </BrowserRouter>
-    </Provider>
-  </ConfigProvider>,
+  <ErrorBoundary>
+    <ConfigProvider locale={enUS}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <APIProvider apiKey={import.meta.env.VITE_MAP_API_KEY}>
+            <App />
+          </APIProvider>
+        </BrowserRouter>
+      </Provider>
+    </ConfigProvider>
+  </ErrorBoundary>,
 );

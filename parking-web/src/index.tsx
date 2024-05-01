@@ -1,14 +1,22 @@
 import { ConfigProvider } from "antd";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import ErrorBoundary from "./components/ErrorBoundary";
 import "./index.less";
+import { store } from "./store";
 import enUS from "antd/lib/locale/en_US";
-import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById("root")!).render(
-  <ConfigProvider locale={enUS}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </ConfigProvider>,
+ReactDOM.render(
+  <ErrorBoundary>
+    <ConfigProvider locale={enUS}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ConfigProvider>
+  </ErrorBoundary>,
+  document.getElementById("root")
 );

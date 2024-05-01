@@ -6,23 +6,23 @@ const AboutPage = () => {
     {
       name: "Đăng Khoa",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2Ftrunghuynh.jpg?alt=media&token=1070eb20-a905-44fb-805f-7708d7ba4e00",
+        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=1070eb20-a905-44fb-805f-7708d7ba4e00",
       title: "Software engineer",
       github: "https://github.com/khoavo1709",
     },
     {
       name: "Đại Lợi",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2Fquangpn.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
+        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
       title: "Software engineer",
       github: "https://github.com/dailoi280702",
     },
     {
       name: "Minh Quang",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2Fquangpn.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
+        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
       title: "Software engineer",
-      github: "https://github.com/quangpn24",
+      github: "https://github.com/",
     },
   ];
   return (

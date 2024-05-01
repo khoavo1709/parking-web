@@ -13,6 +13,7 @@
     "@ant-design/icons": "^5.3.6",
     "@ant-design/pro-layout": "^7.19.0",
     "@reduxjs/toolkit": "^2.2.3",
+    "@vis.gl/react-google-maps": "^0.9.0",
     "ant-design": "^1.0.0",
     "antd": "^5.16.2",
     "axios": "^1.6.8",

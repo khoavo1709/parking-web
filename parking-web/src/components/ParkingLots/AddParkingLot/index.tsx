@@ -9,6 +9,7 @@ import AddBlockForm from "./AddBlockForm";
 import ParkingLotsForm from "./AddParkingLotsForm";
 import TimeFrameForm from "./AddTimeFrameForm";
 import styles from "./index.module.less";
+import GoogleMap from "@/components/Map";
 
 const { Step } = Steps;
 interface IProps {
@@ -366,12 +367,21 @@ const AddParkingLot = (props: IProps) => {
           parkingLot={parkingLot}
           form={lotForm}
           isVisible={current == 0}
-          map={<div className="w-full aspect-[2] mb-8">this is a map</div>}
-        />
-        <AddBlockForm
-          form={blocksForm}
-          parkingLot={parkingLot}
-          isVisible={current == 1}
+          map={
+            <div className="w-full aspect-[2] mb-8">
+              <GoogleMap
+                setPosition={(lat, lng) => {
+                  lotForm.setFieldValue("lat", lat);
+                  lotForm.setFieldValue("long", lng);
+                  console.log(lat, " ", lng);
+                }}
+                setAddress={(addr) => {
+                  lotForm.setFieldValue("address", addr);
+                  console.log(addr);
+                }}
+              />
+            </div>
+          }
         />
         <TimeFrameForm
           form={timeFramesForm}

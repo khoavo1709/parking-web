@@ -1,3 +1,4 @@
 import authSlice from "./authSlice";
+import { parkingLotSlice } from "./parkingLotSlice";
 
-export { authSlice };
+export { authSlice, parkingLotSlice };

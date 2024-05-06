@@ -1,4 +1,5 @@
 import BlockDetails from "@/components/ParkingLots/BlockDetails";
+import TimeFrameDetails from "@/components/ParkingLots/TimeFrameDetails";
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

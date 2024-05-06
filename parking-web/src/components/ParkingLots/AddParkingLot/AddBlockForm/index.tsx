@@ -17,16 +17,14 @@ const AddBlockForm = (props: Props) => {
     }
   }, [props.parkingLot]);
 
-  const BlockCodeValidator = (rule: any, value: any, callback: any) => {
+  const BlockCodeValidator = async (rule: any, value: any) => {
     const index = rule.field.split(".")[1];
     if (value != null) {
       const res = props.form
         .getFieldsValue()
-        .blocks.find((x: any, i: number) => x.blockCode == value && i != index);
-      if (res) callback("Block code is being duplicated!");
-      else callback();
-    } else {
-      callback();
+        .blocks.find((x: any, i: number) => x.code == value && i != index);
+      if (res) console.log("Block code is being duplicated!");
+      if (res) throw new Error("Block code is being duplicated!");
     }
   };
 

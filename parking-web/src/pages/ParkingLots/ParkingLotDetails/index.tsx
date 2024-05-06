@@ -1,3 +1,4 @@
+import BlockDetails from "@/components/ParkingLots/BlockDetails";
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -56,8 +57,12 @@ const ParkingLotDetails = () => {
             <DescriptionItem title="Description" content={data?.description} />
           </Card>
         </Col>
-        <Col span={12}>Blocks details:</Col>
-        <Col span={12}>Time frames details:</Col>
+        <Col span={12}>
+          <BlockDetails idParkingLot={id ?? ""} />
+        </Col>
+        <Col span={12}>
+          <TimeFrameDetails idParkingLot={id ?? ""} />
+        </Col>
       </Row>
     </div>
   );

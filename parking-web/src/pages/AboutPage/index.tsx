@@ -6,21 +6,21 @@ const AboutPage = () => {
     {
       name: "Đăng Khoa",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=1070eb20-a905-44fb-805f-7708d7ba4e00",
+        "https://cdn.vectorstock.com/i/2000v/40/08/black-background-and-white-letter-k-grunge-vector-27974008.avif",
       title: "Software engineer",
       github: "https://github.com/khoavo1709",
     },
     {
       name: "Đại Lợi",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
+        "https://cdn.vectorstock.com/i/2000v/27/49/grunge-letter-l-vector-5262749.avif",
       title: "Software engineer",
       github: "https://github.com/dailoi280702",
     },
     {
       name: "Minh Quang",
       imgUrl:
-        "https://firebasestorage.googleapis.com/v0/b/lanspire.appspot.com/o/images%2.jpg?alt=media&token=eb17f1d7-aaf2-40e1-a8a1-a181a6c585d4",
+        "https://cdn.vectorstock.com/i/2000v/27/61/grunge-letter-q-vector-5262761.avif",
       title: "Software engineer",
       github: "https://github.com/",
     },

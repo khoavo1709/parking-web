@@ -17,16 +17,15 @@ const TimeFrameForm = (props: IProps) => {
     }
   }, [props.parkingLot]);
 
-  const DurationValidator = (rule: any, value: any, callback: any) => {
+  const DurationValidator = async (rule: any, value: any) => {
     const index = rule.field.split(".")[1];
     if (value != null) {
       const res = props.form
         .getFieldsValue()
-        .timeFrames.find((x: any, i: number) => x.time == value && i != index);
-      if (res) callback("Duration is being duplicated!");
-      else callback();
-    } else {
-      callback();
+        .timeFrames.find(
+          (x: any, i: number) => x.duration == value && i != index,
+        );
+      if (res) return new Error("Duration is being duplicated!");
     }
   };
 

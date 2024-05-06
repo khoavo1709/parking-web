@@ -15,7 +15,7 @@ const ParkingLots: FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const parkingLotState = useAppSelector(selectParkingLot);
   const [dataSource, setDataSource] = useState<Array<ParkingLot>>(
-    parkingLotState.parkingLots
+    parkingLotState.parkingLots,
   );
   const [idParkingLot, setIdParkingLot] = useState<string>();
   const dispatch = useAppDispatch();
@@ -96,7 +96,7 @@ const ParkingLots: FC = () => {
   const handleSearch = (value: string) => {
     if (value) {
       const tmp = parkingLotState.parkingLots.filter(
-        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0
+        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
       );
       setDataSource(tmp);
     } else {
@@ -148,7 +148,7 @@ const ParkingLots: FC = () => {
               dataSource={dataSource}
               columns={columns}
               loading={parkingLotState.loading}
-              rowKey={(row) => row.id}
+              rowKey={(row) => row.id!}
             />
           </Col>
         </Row>

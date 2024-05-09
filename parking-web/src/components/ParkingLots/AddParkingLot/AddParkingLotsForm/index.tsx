@@ -35,6 +35,14 @@ const ParkingLotsForm = (props: IProps) => {
     return null;
   }
 
+  const timeValidator = async (rule: any, value: any) => {
+    if (value != null) {
+      const { startTime, endTime } = props.form.getFieldsValue();
+      if (startTime > endTime)
+        throw new Error("Start time must not be greater than end time");
+    }
+  };
+
   return (
     <div>
       <Form form={form} layout="vertical">
@@ -52,7 +60,10 @@ const ParkingLotsForm = (props: IProps) => {
             <Form.Item
               label="Start time"
               name="startTime"
-              rules={[{ required: true, message: "Please input start time!" }]}
+              rules={[
+                { required: true, message: "Please input start time!" },
+                { validator: timeValidator },
+              ]}
             >
               <TimePicker format={"HH:mm"} />
             </Form.Item>
@@ -61,7 +72,10 @@ const ParkingLotsForm = (props: IProps) => {
             <Form.Item
               label="End time"
               name="endTime"
-              rules={[{ required: true, message: "Please input end time!" }]}
+              rules={[
+                { required: true, message: "Please input end time!" },
+                { validator: timeValidator },
+              ]}
             >
               <TimePicker format={"HH:mm"} />
             </Form.Item>

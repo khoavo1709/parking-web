@@ -42,7 +42,7 @@ const TimeFrameForm = (props: IProps) => {
       <Form.List name="timeFrames">
         {(fields, { add, remove }) => (
           <>
-            {fields.map(({ key, name, fieldKey, ...restField }: any) => (
+            {fields.map(({ key, name, ...restField }: any) => (
               <Space
                 key={key}
                 align="baseline"
@@ -53,7 +53,7 @@ const TimeFrameForm = (props: IProps) => {
                   style={{ marginRight: "60px" }}
                   label="Duration"
                   name={[name, "duration"]}
-                  fieldKey={[fieldKey, "duration"]}
+                  // fieldKey={[fieldKey, "duration"]}
                   className=""
                   rules={[
                     { required: true, message: "Please, enter duration." },
@@ -72,7 +72,7 @@ const TimeFrameForm = (props: IProps) => {
                   {...restField}
                   label="Price"
                   name={[name, "cost"]}
-                  fieldKey={[fieldKey, "cost"]}
+                  // fieldKey={[fieldKey, "cost"]}
                   rules={[
                     { required: true, message: "Please, enter price." },
                     { validator: numberValidator },

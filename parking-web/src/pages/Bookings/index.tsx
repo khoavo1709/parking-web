@@ -17,7 +17,7 @@ const Bookings = () => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     )
       .then((res) => {
         if (res.ok) {
@@ -47,7 +47,7 @@ const Bookings = () => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     )
       .then((res) => {
         if (res.ok) {

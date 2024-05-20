@@ -10,6 +10,8 @@ import TimeFrameForm from "./AddTimeFrameForm";
 import styles from "./index.module.less";
 import GoogleMap from "@/components/Map";
 import AddBlockForm from "./AddBlockForm";
+import dayjs from "dayjs";
+import { start } from "repl";
 
 const { Step } = Steps;
 interface IProps {
@@ -75,8 +77,18 @@ const AddParkingLot = (props: IProps) => {
           const { name, address, lat, long, description } =
             lotForm.getFieldsValue();
 
-          startTime = moment(startTime).subtract(20, "hours");
-          endTime = moment(endTime).subtract(20, "hours");
+          // startTime = moment(startTime).subtract(17, "hours").toISOString();
+          // endTime = moment(endTime).subtract(17, "hours").toISOString();
+
+          console.log(startTime, endTime);
+          startTime = new Date(
+            new Date(startTime).getTime() + 7 * 60 * 60 * 1000,
+          ).toISOString();
+          endTime = new Date(
+            new Date(endTime).getTime() + 7 * 60 * 60 * 1000,
+          ).toISOString();
+
+          console.log(startTime, endTime);
           const parkingLot = {
             name,
             address,

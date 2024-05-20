@@ -82,10 +82,10 @@ const AddParkingLot = (props: IProps) => {
 
           console.log(startTime, endTime);
           startTime = new Date(
-            new Date(startTime).getTime() + 7 * 60 * 60 * 1000,
+            new Date(startTime).getTime() + 0 * 60 * 60 * 1000,
           ).toISOString();
           endTime = new Date(
-            new Date(endTime).getTime() + 7 * 60 * 60 * 1000,
+            new Date(endTime).getTime() + 0 * 60 * 60 * 1000,
           ).toISOString();
 
           console.log(startTime, endTime);

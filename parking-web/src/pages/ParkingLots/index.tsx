@@ -1,4 +1,3 @@
-import { parkingLotApi } from "@/api";
 import AddParkingLot from "@/components/ParkingLots/AddParkingLot";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
@@ -88,9 +87,7 @@ const ParkingLots: FC = () => {
   ];
 
   const handleDelete = (id: string) => {
-    parkingLotApi.delete(id).then(() => {
-      dispatch(parkingLotActions.getAllParkingLots(id));
-    });
+    dispatch(parkingLotActions.deleteParkingLot(id));
   };
 
   const handleSearch = (value: string) => {
@@ -105,7 +102,7 @@ const ParkingLots: FC = () => {
   };
 
   useEffect(() => {
-    let idCompany = localStorage.getItem("COMPANY_ID");
+    const idCompany = localStorage.getItem("COMPANY_ID");
     dispatch(parkingLotActions.getAllParkingLots(idCompany));
   }, [dispatch]);
 

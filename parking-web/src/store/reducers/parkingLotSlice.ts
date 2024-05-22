@@ -40,7 +40,7 @@ export const parkingLotSlice = createSlice({
       })
       .addCase(createParkingLot.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.parkingLots.push(payload);
+        state.parkingLots = payload;
       })
       .addCase(createParkingLot.rejected, (state, { payload }) => {
         state.loading = false;
@@ -51,9 +51,7 @@ export const parkingLotSlice = createSlice({
       })
       .addCase(updateParkingLot.fulfilled, (state, { payload }) => {
         state.loading = false;
-        // state.parkingLots = state.parkingLots.map((lot) =>
-        //   lot.idParkingLot == payload.idParkingLot ? payload : lot,
-        // );
+        state.parkingLots = payload;
       })
       .addCase(updateParkingLot.rejected, (state, { payload }) => {
         state.loading = false;
@@ -64,9 +62,7 @@ export const parkingLotSlice = createSlice({
       })
       .addCase(deleteParkingLot.fulfilled, (state, { payload }) => {
         state.loading = false;
-        // state.parkingLots = state.parkingLots.map((e) =>
-        //   e.idParkingLot == payload.idParkingLot ? payload : e,
-        // );
+        state.parkingLots = payload;
       })
       .addCase(deleteParkingLot.rejected, (state, { payload }) => {
         state.loading = false;

@@ -36,6 +36,6 @@ type Employee = {
   name: string;
   email: string;
   phoneNumber: string;
-  idCompany: string;
+  companyId: string;
   status: string;
 };

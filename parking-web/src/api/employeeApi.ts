@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const url: string = "/v1/emplloyee";
 
-const parkingLotApi = {
+const employeeApi = {
   getAll: (id: any) => {
     return axiosClient.get(`${url}/get-list?companyId=${id}`);
   },
@@ -23,4 +23,4 @@ const parkingLotApi = {
     return axiosClient.delete(`${url}/delete/${id}`);
   },
 };
-export default parkingLotApi;
+export default employeeApi;

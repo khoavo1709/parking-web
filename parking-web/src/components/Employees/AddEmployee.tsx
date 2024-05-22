@@ -1,4 +1,4 @@
-import { employeeApi, parkingLotApi } from "@/api";
+import { employeeApi } from "@/api";
 import { createEmployee, updateEmployee } from "@/store/actions/employeeAction";
 import { useAppDispatch } from "@/store/hooks";
 import { LockTwoTone } from "@ant-design/icons";
@@ -101,7 +101,7 @@ const AddEmployee = (props: IProps) => {
     dispatch(updateEmployee(data));
   };
 
-  const timeValidator = async (rule: any, value: any) => {
+  const timeValidator = async (_rule: any, value: any) => {
     if (value != null) {
       const { startShiftTime, endShiftTime } = form.getFieldsValue();
       if (startShiftTime > endShiftTime)

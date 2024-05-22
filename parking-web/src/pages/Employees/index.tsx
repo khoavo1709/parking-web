@@ -101,7 +101,14 @@ const Employees = () => {
   ];
 
   const handleSearch = (value: string) => {
-    console.log(value);
+    if (value) {
+      const tmp = employeeState.employees.filter(
+        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
+      );
+      setDataSource(tmp);
+    } else {
+      setDataSource(employeeState.employees);
+    }
   };
 
   const handleDelete = (id: string) => {

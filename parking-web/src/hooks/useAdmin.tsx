@@ -5,7 +5,7 @@ const useAdmin = () => {
 
   useEffect(() => {
     const session_type = localStorage.getItem("SESSION_TYPE");
-    setIsAdmin(session_type === "admin");
+    setIsAdmin(session_type == "admin");
   }, []);
 
   return { isAdmin };

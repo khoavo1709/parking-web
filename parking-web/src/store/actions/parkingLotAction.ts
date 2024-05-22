@@ -79,9 +79,33 @@ const deleteParkingLot = createAsyncThunk(
   },
 );
 
+const changeParkingLotStatus = createAsyncThunk(
+  "parkingLots/changeSatus",
+  async (
+    data: { id: string; status: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      await parkingLotApi.changeStatus(data.id, data.status);
+      const companyId = localStorage.getItem("COMPANY_ID");
+      const getList = await dispatch(getAllParkingLots(companyId));
+
+      return getList.payload;
+    } catch (error: any) {
+      if (!error.response) {
+        throw error;
+      }
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  },
+);
+
 export {
   getAllParkingLots,
   createParkingLot,
   updateParkingLot,
   deleteParkingLot,
+  changeParkingLotStatus,
 };

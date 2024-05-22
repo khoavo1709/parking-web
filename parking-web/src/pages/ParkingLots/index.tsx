@@ -1,13 +1,70 @@
 import AddParkingLot from "@/components/ParkingLots/AddParkingLot";
+import { useAdmin } from "@/hooks/useAdmin";
+import { changeParkingLotStatus } from "@/store/actions/parkingLotAction";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { parkingLotActions } from "@/store/reducers/parkingLotSlice";
 import { selectParkingLot } from "@/store/selectors";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Popconfirm,
+  Row,
+  Select,
+  Table,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/lib/input/Search";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const StatusTag = ({ status }: { status: string }) => {
+  if (status == "active") {
+    return <Tag color="green">active</Tag>;
+  }
+  if (status == "inactive") {
+    return <Tag color="gray">inactive</Tag>;
+  }
+  return <Tag color="yellow">pending</Tag>;
+};
+
+const StatusOptions = ({
+  status,
+  parkingLot,
+}: {
+  status: string;
+  parkingLot: ParkingLot;
+}) => {
+  const dispatch = useAppDispatch();
+
+  const handleChangeStatus = (status: string) => {
+    dispatch(changeParkingLotStatus({ id: parkingLot.id!, status }))
+      .then(() => {
+        message.success(
+          `you have successfully updated the status of ${parkingLot.name}`,
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+        message.error("Can not change this parking lot's status at the moment");
+      });
+  };
+
+  return (
+    <Select
+      defaultValue={status}
+      className="w-[100px]"
+      onChange={handleChangeStatus}
+    >
+      <Select.Option value="active">active</Select.Option>
+      <Select.Option value="inactive">inactive</Select.Option>
+    </Select>
+  );
+};
 
 const ParkingLots: FC = () => {
   const navigate = useNavigate();
@@ -18,6 +75,9 @@ const ParkingLots: FC = () => {
   );
   const [idParkingLot, setIdParkingLot] = useState<string>();
   const dispatch = useAppDispatch();
+  const { isAdmin } = useAdmin();
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const columns: ColumnsType<ParkingLot> = [
     {
@@ -31,14 +91,16 @@ const ParkingLots: FC = () => {
     },
     {
       title: "Status",
-      dataIndex: "isDeleted",
+      dataIndex: "status",
       align: "center",
-      render: (isDeleted: boolean) =>
-        isDeleted ? (
-          <Tag color="red">Deleted</Tag>
-        ) : (
-          <Tag color="green">Available</Tag>
-        ),
+      render: (status: string, parkingLot) => (
+        <>
+          {isAdmin == false && <StatusTag status={status} />}
+          {isAdmin == true && (
+            <StatusOptions status={status} parkingLot={parkingLot} />
+          )}
+        </>
+      ),
     },
     {
       title: "",
@@ -47,7 +109,7 @@ const ParkingLots: FC = () => {
       width: "10%",
       render: (id: string, parkingLot) => {
         return (
-          <div className="flex gap-2.5 justify-start flex-col md:flex-row">
+          <div className="flex gap-2.5 justify-center flex-col md:flex-row">
             <Tooltip title="View details">
               <Button
                 type="primary"
@@ -58,17 +120,19 @@ const ParkingLots: FC = () => {
                 }
               />
             </Tooltip>
-            <Tooltip title="Edit">
-              <Button
-                type="default"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setIsVisible(true);
-                  setIdParkingLot(id);
-                }}
-              />
-            </Tooltip>
-            {parkingLot.isDeleted ? null : (
+            {isAdmin == false && (
+              <Tooltip title="Edit">
+                <Button
+                  type="default"
+                  icon={<EditOutlined />}
+                  onClick={() => {
+                    setIsVisible(true);
+                    setIdParkingLot(id);
+                  }}
+                />
+              </Tooltip>
+            )}
+            {parkingLot.isDeleted || isAdmin || isAdmin == undefined ? null : (
               <Tooltip title="Delete">
                 <Popconfirm
                   okText="Yes"
@@ -90,15 +154,27 @@ const ParkingLots: FC = () => {
     dispatch(parkingLotActions.deleteParkingLot(id));
   };
 
-  const handleSearch = (value: string) => {
-    if (value) {
-      const tmp = parkingLotState.parkingLots.filter(
-        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
+  const handleSearch = (search: string, filter: string) => {
+    setSearch(search);
+    setFilter(filter);
+
+    let tmp = parkingLotState.parkingLots;
+
+    if (search) {
+      tmp = parkingLotState.parkingLots.filter(
+        (e) => e.name.toLowerCase().search(search.toLowerCase()) >= 0,
       );
-      setDataSource(tmp);
-    } else {
-      setDataSource(parkingLotState.parkingLots);
     }
+
+    if (filter != "all") {
+      tmp = tmp.filter((e) => e.status == filter);
+    }
+
+    setDataSource(tmp);
+  };
+
+  const handleParkingLotsUpdate = () => {
+    handleSearch(search, filter);
   };
 
   useEffect(() => {
@@ -107,7 +183,7 @@ const ParkingLots: FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setDataSource(parkingLotState.parkingLots);
+    handleParkingLotsUpdate();
   }, [parkingLotState.parkingLots]);
 
   return (
@@ -122,23 +198,38 @@ const ParkingLots: FC = () => {
               placeholder="Search"
               allowClear
               enterButton
-              onSearch={(e) => handleSearch(e)}
+              onSearch={(e) => handleSearch(e, filter)}
             />
           </Col>
-          <Col flex="auto" />
-          <Col span={4}>
-            <Button
-              type="primary"
-              size="large"
-              block
-              onClick={() => {
-                setIsVisible(true);
-                setIdParkingLot(undefined);
-              }}
+          <Col>
+            <Select
+              value={filter}
+              onChange={(e) => handleSearch(search, e)}
+              className="w-[100px] h-10"
             >
-              Add
-            </Button>
+              <Select.Option value="all">All</Select.Option>
+              <Select.Option value="pending">Pending</Select.Option>
+              <Select.Option value="active">Active</Select.Option>
+              <Select.Option value="inactive">Inactive</Select.Option>
+            </Select>
           </Col>
+
+          <Col flex="auto" />
+          {isAdmin != undefined && !isAdmin && (
+            <Col span={4}>
+              <Button
+                type="primary"
+                size="large"
+                block
+                onClick={() => {
+                  setIsVisible(true);
+                  setIdParkingLot(undefined);
+                }}
+              >
+                Add
+              </Button>
+            </Col>
+          )}
           <Col span={24}>
             <Table<ParkingLot>
               bordered

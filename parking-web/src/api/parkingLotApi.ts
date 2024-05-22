@@ -31,5 +31,9 @@ const parkingLotApi = {
   checkNameDuplicate: (name: string) => {
     return axiosClient.post(`${url}/check-name`, { name });
   },
+
+  changeStatus: (id: string, status: string) => {
+    return axiosClient.put(`${url}/${id}/status`, { status });
+  },
 };
 export default parkingLotApi;

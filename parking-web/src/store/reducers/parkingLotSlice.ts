@@ -4,6 +4,7 @@ import {
   deleteParkingLot,
   getAllParkingLots,
   updateParkingLot,
+  changeParkingLotStatus,
 } from "@/store/actions/parkingLotAction";
 
 export type ParkingLotState = {
@@ -67,6 +68,17 @@ export const parkingLotSlice = createSlice({
       .addCase(deleteParkingLot.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
+      })
+      .addCase(changeParkingLotStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(changeParkingLotStatus.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.parkingLots = payload;
+      })
+      .addCase(changeParkingLotStatus.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
       });
   },
 });
@@ -77,4 +89,5 @@ export const parkingLotActions = {
   createParkingLot,
   updateParkingLot,
   deleteParkingLot,
+  changeParkingLotStatus,
 };

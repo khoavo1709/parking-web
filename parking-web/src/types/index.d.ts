@@ -30,3 +30,12 @@ type TimeFrame = {
   duration: number;
   cost: number;
 };
+
+type Employee = {
+  id?: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  idCompany: string;
+  status: string;
+};

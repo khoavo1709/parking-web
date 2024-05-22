@@ -1,5 +1,6 @@
 import AboutPage from "@/pages/AboutPage";
 import Bookings from "@/pages/Bookings";
+import Employees from "@/pages/Employees";
 import ParkingLots from "@/pages/ParkingLots";
 import ParkingLotDetails from "@/pages/ParkingLots/ParkingLotDetails";
 import Setting from "@/pages/Settings";
@@ -25,6 +26,10 @@ const MerchantRoutes: IRoute[] = [
   {
     path: "/bookings",
     page: <Bookings />,
+  },
+  {
+    path: "/employees",
+    page: <Employees />,
   },
   {
     path: "/setting",

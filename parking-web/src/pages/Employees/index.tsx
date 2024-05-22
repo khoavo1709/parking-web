@@ -37,7 +37,7 @@ const Employees = () => {
       dataIndex: "isDeleted",
       align: "center",
       render: (status: string) =>
-        status != "ACTIVE" ? (
+        status != "active" ? (
           <Tag color="red">Deleted</Tag>
         ) : (
           <Tag color="green">Available</Tag>

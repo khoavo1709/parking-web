@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/store/hooks";
+import { LockTwoTone } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -78,7 +79,7 @@ const AddEmployee = (props: IProps) => {
         props.onCancel();
       }}
     >
-      <Form layout="vertical" onFinish={handleSubmit}>
+      <Form className="mt-5" layout="vertical" onFinish={handleSubmit}>
         <Row gutter={[20, 0]}>
           <Col span={12}>
             <Form.Item
@@ -88,7 +89,7 @@ const AddEmployee = (props: IProps) => {
                 { required: true, message: "Please input employee name!" },
               ]}
             >
-              <Input />
+              <Input placeholder="John Doe" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -99,9 +100,9 @@ const AddEmployee = (props: IProps) => {
                 { required: true, message: "Please input employee status!" },
               ]}
             >
-              <Select>
-                <Select.Option value="ACTIVE">ACTIVE</Select.Option>
-                <Select.Option value="INACTIVE">INACTIVE</Select.Option>
+              <Select defaultValue={"active"}>
+                <Select.Option value="active">active</Select.Option>
+                <Select.Option value="inactive">inactive</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -116,7 +117,7 @@ const AddEmployee = (props: IProps) => {
                 { required: true, message: "Please input phone number!" },
               ]}
             >
-              <Input />
+              <Input placeholder="0123456789" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -131,13 +132,34 @@ const AddEmployee = (props: IProps) => {
                 { type: "email", message: "Invalid email!" },
               ]}
             >
-              <Input />
+              <Input placeholder="johndoe@domain.com" />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={[20, 0]}>
           <Col span={12}>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+                {
+                  min: 6,
+                  message: "Password must be minimum 6 characters.",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Password"
+                prefix={<LockTwoTone />}
+              ></Input.Password>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
             <Form.Item
               label="Shift start time"
               name="shiftStartTime"
@@ -149,7 +171,7 @@ const AddEmployee = (props: IProps) => {
               <TimePicker format={"HH:mm"} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={6}>
             <Form.Item
               label="Shift end time"
               name="shiftEndTime"
@@ -162,6 +184,7 @@ const AddEmployee = (props: IProps) => {
             </Form.Item>
           </Col>
         </Row>
+
         <div className="flex justify-end">
           <Form.Item className="ml-auto">
             <Button type="primary" htmlType="submit" loading={isLoading}>

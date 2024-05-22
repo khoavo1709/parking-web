@@ -5,13 +5,15 @@ type Props = {
   children: string | JSX.Element | JSX.Element[];
 };
 
-const AuthWrapper: React.FC<Props> = ({ children }) => {
+const AdminWrapper: React.FC<Props> = ({ children }) => {
   const idCompany = localStorage.getItem("COMPANY_ID");
-  if (!idCompany) {
-    return <Navigate to="/login" replace />;
+  const isAdmin = localStorage.getItem("SESSION_TYPE") == "admin";
+
+  if (!idCompany || !isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
 };
 
-export default AuthWrapper;
+export default AdminWrapper;

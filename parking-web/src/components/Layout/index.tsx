@@ -5,10 +5,13 @@ import ProLayout from "@ant-design/pro-layout";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import AppFooter from "./Footer";
+import { useAdmin } from "@/hooks/useAdmin";
+import MenuAdminItems from "@/config/MenuAdminItems";
 
 const MainLayout = () => {
   const [pathname, setPathname] = useState(window.location.pathname);
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
 
   return (
     <div
@@ -17,7 +20,7 @@ const MainLayout = () => {
       }}
     >
       <ProLayout
-        route={MenuItems}
+        route={isAdmin ? MenuAdminItems : MenuItems}
         location={{
           pathname,
         }}

@@ -6,7 +6,11 @@ const merchantUrl: string = "/merchant/parking-lot";
 
 const parkingLotApi = {
   getAll: (id: any) => {
-    return axiosClient.get(`${merchantUrl}/get-list?company=${id}`);
+    const session_type = localStorage.getItem("SESSION_TYPE");
+    if (session_type == "admin") {
+      return axiosClient.get(`${merchantUrl}/get-list`);
+    }
+    return axiosClient.get(`${merchantUrl}/get-list?company_id=${id}`);
   },
 
   create: (data: any) => {
@@ -26,6 +30,10 @@ const parkingLotApi = {
   },
   checkNameDuplicate: (name: string) => {
     return axiosClient.post(`${url}/check-name`, { name });
+  },
+
+  changeStatus: (id: string, status: string) => {
+    return axiosClient.put(`${url}/${id}/status`, { status });
   },
 };
 export default parkingLotApi;

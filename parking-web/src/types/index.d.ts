@@ -11,6 +11,7 @@ type ParkingLot = {
   blocks?: Block[];
   startTime?: any;
   endTime?: any;
+  status: string;
 };
 
 type Block = {

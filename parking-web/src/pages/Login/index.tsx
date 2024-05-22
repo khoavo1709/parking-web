@@ -29,6 +29,7 @@ const Login = () => {
       })
       .then((res) => {
         localStorage.setItem("COMPANY_ID", res.data?.id);
+        localStorage.setItem("SESSION_TYPE", res.data?.role);
         console.log(res.data);
         setIsSuccess(true);
         setIsLoading(false);

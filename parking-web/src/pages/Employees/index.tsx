@@ -1,17 +1,18 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectParkingLot } from "@/store/selectors";
+import { selectEmployee } from "@/store/selectors";
 import { Button, Card, Col, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
 import Search from "antd/lib/input/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ColumnsType } from "antd/es/table";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import AddEmployee from "@/components/Employees/AddEmployee";
+import { employeeActions } from "@/store/reducers/employeeSlice";
 
 const Employees = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<Array<Employee>>([]);
-  const parkingLotState = useAppSelector(selectParkingLot);
+  const employeeState = useAppSelector(selectEmployee);
   const dispatch = useAppDispatch();
   const [employeeId, setEmployeeId] = useState<string>();
 
@@ -81,6 +82,15 @@ const Employees = () => {
     console.log(value);
   };
 
+  useEffect(() => {
+    const companyId = localStorage.getItem("COMPANY_ID");
+    dispatch(employeeActions.getAllEmployees(companyId));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setDataSource(employeeState.employees);
+  }, [employeeState.employees]);
+
   return (
     <div>
       <h1>Employees</h1>
@@ -114,7 +124,7 @@ const Employees = () => {
               bordered
               dataSource={dataSource}
               columns={columns}
-              loading={parkingLotState.loading}
+              loading={employeeState.loading}
               rowKey={(row) => row.id!}
             />
           </Col>

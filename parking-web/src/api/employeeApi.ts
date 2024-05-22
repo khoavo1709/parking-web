@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClient";
 
-const url: string = "/v1/emplloyee";
+const url: string = "/v1/employee";
 
 const employeeApi = {
   getAll: (id: any) => {

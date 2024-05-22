@@ -1,8 +1,8 @@
-import { createEmployee } from "@/store/actions/employeeAction";
+import { employeeApi, parkingLotApi } from "@/api";
+import { createEmployee, updateEmployee } from "@/store/actions/employeeAction";
 import { useAppDispatch } from "@/store/hooks";
 import { LockTwoTone } from "@ant-design/icons";
 import {
-  Alert,
   Button,
   Col,
   Form,
@@ -13,6 +13,7 @@ import {
   TimePicker,
   message,
 } from "antd";
+import moment from "moment";
 import { useEffect, useState } from "react";
 
 interface IProps {
@@ -25,13 +26,26 @@ const AddEmployee = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
-  const [employee, setEmployee] = useState<Employee | null>(null);
 
   useEffect(() => {
     if (props.employeeId) {
+      employeeApi
+        .getOne(props.employeeId)
+        .then((res) => {
+          const employee = res.data.data as Employee;
+          form.setFieldsValue({
+            name: employee.name,
+            status: employee.status,
+            phoneNumber: employee.phoneNumber,
+            email: employee.email,
+            startShiftTime: moment(new Date(employee.startShiftTime), "HH:mm"),
+            endShiftTime: moment(new Date(employee.endShiftTime), "HH:mm"),
+          });
+        })
+        .catch((e) => console.log(e));
       console.log("fetch employee");
     }
-  }, [props.employeeId]);
+  }, [props.employeeId, form]);
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -64,7 +78,8 @@ const AddEmployee = (props: IProps) => {
         handleAdd(data);
         message.success("You have successfully added a new employee");
       } else {
-        handleUpdate();
+        data["id"] = props.employeeId;
+        handleUpdate(data);
         message.success("You have successfully updated employee");
       }
 
@@ -82,7 +97,9 @@ const AddEmployee = (props: IProps) => {
     dispatch(createEmployee(data));
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = (data: any) => {
+    dispatch(updateEmployee(data));
+  };
 
   const timeValidator = async (rule: any, value: any) => {
     if (value != null) {
@@ -177,7 +194,7 @@ const AddEmployee = (props: IProps) => {
               name="password"
               rules={[
                 {
-                  required: true,
+                  required: !props.employeeId,
                   message: "Please input your password!",
                 },
                 {

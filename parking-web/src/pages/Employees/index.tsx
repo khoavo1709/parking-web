@@ -15,7 +15,11 @@ import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
 
 import { ColumnsType } from "antd/es/table";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UnderlineOutlined,
+} from "@ant-design/icons";
 import AddEmployee from "@/components/Employees/AddEmployee";
 import { employeeActions } from "@/store/reducers/employeeSlice";
 import moment from "moment";
@@ -162,7 +166,10 @@ const Employees = () => {
       <AddEmployee
         employeeId={employeeId}
         isVisible={isVisible}
-        onCancel={() => setIsVisible(false)}
+        onCancel={() => {
+          setIsVisible(false);
+          setEmployeeId(undefined);
+        }}
       />
     </div>
   );

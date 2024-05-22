@@ -21,7 +21,7 @@ const MainLayout = () => {
         location={{
           pathname,
         }}
-        title="Parka merchant"
+        title="Parking merchant"
         logo={logoImage}
         fixedHeader
         fixSiderbar

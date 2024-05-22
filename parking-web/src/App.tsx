@@ -3,13 +3,14 @@ import MainLayout from "@/components/Layout";
 import { MerchantRoutes } from "@/config";
 import AuthWrapper from "@/pages/AuthWrapper";
 import Login from "@/pages/Login";
-import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "@/pages/SignUp";
+import AdminRoutes from "./config/AdminRoutes";
+import AdminWrapper from "./pages/AdminWrapper";
+import MerchantOnlyWrapper from "./pages/MerchantOnlyWrapper";
+import MerchantOnlyRoutes from "./config/MerchantOnlyRoutes";
 
 export default function App() {
-  useEffect(() => {}, []);
-
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -21,7 +22,31 @@ export default function App() {
           </AuthWrapper>
         }
       >
-        {MerchantRoutes?.map((route) => (
+        <>
+          {MerchantRoutes?.map((route) => (
+            <Route key={route.path} path={route.path} element={route.page} />
+          ))}
+        </>
+      </Route>
+      <Route
+        element={
+          <MerchantOnlyWrapper>
+            <MainLayout />
+          </MerchantOnlyWrapper>
+        }
+      >
+        {MerchantOnlyRoutes?.map((route) => (
+          <Route key={route.path} path={route.path} element={route.page} />
+        ))}
+      </Route>
+      <Route
+        element={
+          <AdminWrapper>
+            <MainLayout />
+          </AdminWrapper>
+        }
+      >
+        {AdminRoutes?.map((route) => (
           <Route key={route.path} path={route.path} element={route.page} />
         ))}
       </Route>

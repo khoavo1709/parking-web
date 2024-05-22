@@ -11,6 +11,7 @@ const Content = () => {
 
   const handleLogout = () => {
     // dispatch(logout());
+    localStorage.clear();
     navigate("/login");
   };
 

@@ -1,6 +1,16 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectEmployee } from "@/store/selectors";
-import { Button, Card, Col, Popconfirm, Row, Table, Tag, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Popconfirm,
+  Row,
+  Table,
+  Tag,
+  Tooltip,
+  message,
+} from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
 
@@ -8,6 +18,8 @@ import { ColumnsType } from "antd/es/table";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import AddEmployee from "@/components/Employees/AddEmployee";
 import { employeeActions } from "@/store/reducers/employeeSlice";
+import moment from "moment";
+import { deleteEmployee } from "@/store/actions/employeeAction";
 
 const Employees = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -16,10 +28,6 @@ const Employees = () => {
   const dispatch = useAppDispatch();
   const [employeeId, setEmployeeId] = useState<string>();
 
-  const handleDelete = (id: string) => {
-    console.log(id);
-  };
-
   const columns: ColumnsType<Employee> = [
     {
       title: "Name",
@@ -27,21 +35,31 @@ const Employees = () => {
     },
     {
       title: "Phone",
-      dataIndex: "phone",
+      dataIndex: "phoneNumber",
     },
     {
       title: "Email",
       dataIndex: "email",
     },
     {
+      title: "Start shift",
+      dataIndex: "startShiftTime",
+      render: (time: string) => moment(time).format("HH:mm"),
+    },
+    {
+      title: "End shift",
+      dataIndex: "endShiftTime",
+      render: (time: string) => moment(time).format("HH:mm"),
+    },
+    {
       title: "Status",
-      dataIndex: "isDeleted",
+      dataIndex: "status",
       align: "center",
       render: (status: string) =>
-        status != "active" ? (
-          <Tag color="red">Deleted</Tag>
+        status == "active" ? (
+          <Tag color="green">Active</Tag>
         ) : (
-          <Tag color="green">Available</Tag>
+          <Tag color="gray">Inactive</Tag>
         ),
     },
     {
@@ -51,7 +69,7 @@ const Employees = () => {
       width: "10%",
       render: (id: string) => {
         return (
-          <div className="flex gap-2.5 justify-start flex-col md:flex-row">
+          <div className="flex gap-2.5 justify-center flex-col md:flex-row">
             <Tooltip title="Edit">
               <Button
                 type="default"
@@ -82,12 +100,22 @@ const Employees = () => {
     console.log(value);
   };
 
+  const handleDelete = (id: string) => {
+    try {
+      dispatch(deleteEmployee(id));
+    } catch (e) {
+      console.log(e);
+      message.error("Can not delete this employee at the moment");
+    }
+  };
+
   useEffect(() => {
-    const companyId = localStorage.getItem("COMPANY_ID");
-    dispatch(employeeActions.getAllEmployees(companyId));
+    const companyID = localStorage.getItem("COMPANY_ID");
+    dispatch(employeeActions.getAllEmployees(companyID));
   }, [dispatch]);
 
   useEffect(() => {
+    console.log(employeeState.employees);
     setDataSource(employeeState.employees);
   }, [employeeState.employees]);
 

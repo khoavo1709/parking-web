@@ -40,7 +40,7 @@ export const employeeSlice = createSlice({
       })
       .addCase(createEmployee.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.employees.push(payload);
+        state.employees = payload;
       })
       .addCase(createEmployee.rejected, (state, { payload }) => {
         state.loading = false;
@@ -62,7 +62,7 @@ export const employeeSlice = createSlice({
       })
       .addCase(deleteEmployee.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.employees = payload;
       })
       .addCase(deleteEmployee.rejected, (state, { payload }) => {
         state.loading = false;

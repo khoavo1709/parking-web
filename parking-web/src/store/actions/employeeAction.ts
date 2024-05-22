@@ -4,9 +4,9 @@ import axios from "axios";
 
 const getAllEmployees = createAsyncThunk(
   "employees/getAll",
-  async (companyId: any, { rejectWithValue }) => {
+  async (companyID: any, { rejectWithValue }) => {
     try {
-      const res = await employeeApi.getAll(companyId);
+      const res = await employeeApi.getAll(companyID);
       return res.data.data;
     } catch (error: any) {
       if (!error.response) {
@@ -25,7 +25,7 @@ const createEmployee = createAsyncThunk(
     try {
       await employeeApi.create(data);
 
-      const getList = await dispatch(getAllEmployees(data.companyId));
+      const getList = await dispatch(getAllEmployees(data.companyID));
 
       return getList.payload;
     } catch (error: any) {
@@ -44,7 +44,7 @@ const updateEmployee = createAsyncThunk(
   async (data: Employee, { rejectWithValue, dispatch }) => {
     try {
       await employeeApi.update(data.id!, data);
-      const getList = await dispatch(getAllEmployees(data.companyId));
+      const getList = await dispatch(getAllEmployees(data.companyID));
 
       return getList.payload;
     } catch (error: any) {
@@ -60,10 +60,11 @@ const updateEmployee = createAsyncThunk(
 
 const deleteEmployee = createAsyncThunk(
   "employees/delete",
-  async (idCompany: string, { rejectWithValue, dispatch }) => {
+  async (id: string, { rejectWithValue, dispatch }) => {
     try {
-      await employeeApi.delete(idCompany);
-      const getList = await dispatch(getAllEmployees(idCompany));
+      await employeeApi.delete(id);
+      const companyId = localStorage.getItem("COMPANY_ID");
+      const getList = await dispatch(getAllEmployees(companyId));
 
       return getList.payload;
     } catch (error: any) {

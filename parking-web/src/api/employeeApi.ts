@@ -4,10 +4,11 @@ const url: string = "/v1/employee";
 
 const employeeApi = {
   getAll: (id: any) => {
-    return axiosClient.get(`${url}/get-list?companyId=${id}`);
+    return axiosClient.get(`${url}/get-list?companyID=${id}`);
   },
 
   create: (data: any) => {
+    console.log(data);
     return axiosClient.post(`${url}/create`, data);
   },
 

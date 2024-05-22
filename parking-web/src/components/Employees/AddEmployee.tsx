@@ -1,6 +1,8 @@
+import { createEmployee } from "@/store/actions/employeeAction";
 import { useAppDispatch } from "@/store/hooks";
 import { LockTwoTone } from "@ant-design/icons";
 import {
+  Alert,
   Button,
   Col,
   Form,
@@ -34,33 +36,58 @@ const AddEmployee = (props: IProps) => {
   const handleSubmit = () => {
     setIsLoading(true);
     try {
-      const data = form.getFieldsValue();
-      message.success(data);
+      const companyId = localStorage.getItem("COMPANY_ID");
+      const {
+        name,
+        phoneNumber,
+        status,
+        email,
+        password,
+        startShiftTime,
+        endShiftTime,
+      } = form.getFieldsValue();
+
+      const data = {
+        name,
+        phoneNumber,
+        status,
+        email,
+        password,
+        companyID: companyId,
+        startShiftTime: new Date(startShiftTime).toISOString(),
+        endShiftTime: new Date(endShiftTime).toISOString(),
+      };
+
+      console.log(data);
 
       if (!props.employeeId) {
-        handleAdd();
+        handleAdd(data);
         message.success("You have successfully added a new employee");
       } else {
         handleUpdate();
-        message.success("You have successfully update employee");
+        message.success("You have successfully updated employee");
       }
 
+      form.resetFields();
       props.onCancel();
-      form.resetFields;
     } catch (e) {
+      message.error("Email was duplicated");
       console.log(e);
     }
+
     setIsLoading(false);
   };
 
-  const handleAdd = async () => {};
+  const handleAdd = (data: any) => {
+    dispatch(createEmployee(data));
+  };
 
-  const handleUpdate = async () => {};
+  const handleUpdate = () => {};
 
   const timeValidator = async (rule: any, value: any) => {
     if (value != null) {
-      const { startTime, endTime } = form.getFieldsValue();
-      if (startTime > endTime)
+      const { startShiftTime, endShiftTime } = form.getFieldsValue();
+      if (startShiftTime > endShiftTime)
         throw new Error("Start time must not be greater than end time");
     }
   };
@@ -79,7 +106,13 @@ const AddEmployee = (props: IProps) => {
         props.onCancel();
       }}
     >
-      <Form className="mt-5" layout="vertical" onFinish={handleSubmit}>
+      <Form
+        className="mt-5"
+        layout="vertical"
+        onFinish={handleSubmit}
+        form={form}
+        initialValues={{ status: "active" }}
+      >
         <Row gutter={[20, 0]}>
           <Col span={12}>
             <Form.Item
@@ -100,7 +133,7 @@ const AddEmployee = (props: IProps) => {
                 { required: true, message: "Please input employee status!" },
               ]}
             >
-              <Select defaultValue={"active"}>
+              <Select>
                 <Select.Option value="active">active</Select.Option>
                 <Select.Option value="inactive">inactive</Select.Option>
               </Select>
@@ -111,8 +144,8 @@ const AddEmployee = (props: IProps) => {
         <Row gutter={[20, 0]}>
           <Col span={12}>
             <Form.Item
-              label="Phone"
-              name="phone"
+              label="Phone number"
+              name="phoneNumber"
               rules={[
                 { required: true, message: "Please input phone number!" },
               ]}
@@ -161,8 +194,8 @@ const AddEmployee = (props: IProps) => {
           </Col>
           <Col span={6}>
             <Form.Item
-              label="Shift start time"
-              name="shiftStartTime"
+              label="Start shift time"
+              name="startShiftTime"
               rules={[
                 { required: true, message: "Please input start time!" },
                 { validator: timeValidator },
@@ -173,8 +206,8 @@ const AddEmployee = (props: IProps) => {
           </Col>
           <Col span={6}>
             <Form.Item
-              label="Shift end time"
-              name="shiftEndTime"
+              label="End shift time"
+              name="endShiftTime"
               rules={[
                 { required: true, message: "Please input end time!" },
                 { validator: timeValidator },

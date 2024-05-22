@@ -1,4 +1,4 @@
-import { FaParking } from "react-icons/fa";
+import { FaParking, FaUser } from "react-icons/fa";
 import { HiCog } from "react-icons/hi";
 import { IoTicket } from "react-icons/io5";
 
@@ -19,6 +19,15 @@ const MenuItems = {
       icon: (
         <span role="img" className="anticon">
           <IoTicket />
+        </span>
+      ),
+    },
+    {
+      path: "/employees",
+      name: "employees",
+      icon: (
+        <span role="img" className="anticon">
+          <FaUser />
         </span>
       ),
     },

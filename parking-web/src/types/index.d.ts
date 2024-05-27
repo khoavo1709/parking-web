@@ -42,3 +42,11 @@ type Employee = {
   startShiftTime: any;
   endShiftTime: any;
 };
+
+type Company = {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  status: string;
+};

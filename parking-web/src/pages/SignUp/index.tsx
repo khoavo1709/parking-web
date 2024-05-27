@@ -30,14 +30,24 @@ const SignUp = () => {
         if (res.ok) {
           return res.json();
         }
+
+        if (res.status == 400 || res.status == 401) {
+          return res.json();
+        }
+
         return Promise.reject(res);
       })
       .then((res) => {
-        localStorage.setItem("COMPANY_ID", res.data?.id);
-        localStorage.setItem("SESSION_TYPE", res.data?.role);
-        console.log(res.data);
-        notification.success({ message: "Sign up successfully!!" });
-        setIsSuccess(true);
+        if (res.error) {
+          notification.info({ message: res.error.detail });
+        } else {
+          notification.success({
+            message:
+              "Thanks for registering! ✅  We're reviewing your profile and will be in touch soon.",
+          });
+          setIsSuccess(true);
+        }
+
         setIsLoading(false);
       })
       .catch((error) => {

@@ -25,17 +25,27 @@ const Login = () => {
         if (res.ok) {
           return res.json();
         }
+
+        if (res.status == 400 || res.status == 401) {
+          return res.json();
+        }
+
         return Promise.reject(res);
       })
       .then((res) => {
-        localStorage.setItem("COMPANY_ID", res.data?.id);
-        localStorage.setItem("SESSION_TYPE", res.data?.role);
-        console.log(res.data);
-        setIsSuccess(true);
+        if (res.data) {
+          localStorage.setItem("COMPANY_ID", res.data?.id);
+          localStorage.setItem("SESSION_TYPE", res.data?.role);
+          setIsSuccess(true);
+        }
+
+        if (res.error) {
+          notification.info({ message: res.error.detail });
+        }
+
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         notification.error({ message: "Incorrect email or password" });
         setIsLoading(false);
       });

@@ -24,7 +24,7 @@ const MenuItems = {
     },
     {
       path: "/employees",
-      name: "employees",
+      name: "Employees",
       icon: (
         <span role="img" className="anticon">
           <FaUser />

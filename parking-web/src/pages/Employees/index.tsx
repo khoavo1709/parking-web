@@ -15,11 +15,7 @@ import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
 
 import { ColumnsType } from "antd/es/table";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  UnderlineOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import AddEmployee from "@/components/Employees/AddEmployee";
 import { employeeActions } from "@/store/reducers/employeeSlice";
 import moment from "moment";
@@ -103,7 +99,7 @@ const Employees = () => {
   const handleSearch = (value: string) => {
     if (value) {
       const tmp = employeeState.employees.filter(
-        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0,
+        (e) => e.name.toLowerCase().search(value.toLowerCase()) >= 0
       );
       setDataSource(tmp);
     } else {

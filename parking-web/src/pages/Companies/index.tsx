@@ -84,9 +84,10 @@ const Companies: FC = () => {
       render: (status: string, company) => (
         <>
           {isAdmin == false && <StatusTag status={status} />}
-          {isAdmin == true && (
-            <StatusOptions status={status} company={company} />
-          )}
+          {isAdmin == true &&
+            localStorage.getItem("COMPANY_ID") != company.id && (
+              <StatusOptions status={status} company={company} />
+            )}
         </>
       ),
     },

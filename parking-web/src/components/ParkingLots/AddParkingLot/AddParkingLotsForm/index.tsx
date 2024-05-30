@@ -1,6 +1,7 @@
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { Col, Form, Input, Row, TimePicker, FormInstance } from "antd";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const { TextArea } = Input;
 
@@ -13,6 +14,36 @@ interface IProps {
 
 const ParkingLotsForm = (props: IProps) => {
   const form = props.form;
+  const [placeAutocomplete, setPlaceAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const inputRef = useRef<HTMLInputElement>(null);
+  const places = useMapsLibrary("places");
+
+  const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+    console.log(place?.adr_address);
+  };
+
+  useEffect(() => {
+    if (!places || !inputRef.current) {
+      console.log("im fucked");
+      return;
+    }
+
+    const options = {
+      fields: ["geometry", "name", "formatted_address"],
+    };
+
+    setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
+  }, [places]);
+
+  useEffect(() => {
+    if (!placeAutocomplete) return;
+
+    placeAutocomplete.addListener("place_changed", () => {
+      onPlaceSelect(placeAutocomplete.getPlace());
+    });
+  }, [placeAutocomplete]);
 
   useEffect(() => {
     form.resetFields();
@@ -29,13 +60,13 @@ const ParkingLotsForm = (props: IProps) => {
         endTime: moment(tmp.endTime, "HH:mm"),
       });
     }
-  }, [props.parkingLot]);
+  }, [form, props.parkingLot]);
 
   if (!props.isVisible) {
     return null;
   }
 
-  const timeValidator = async (rule: any, value: any) => {
+  const timeValidator = async (_: any, value: any) => {
     if (value != null) {
       const { startTime, endTime } = props.form.getFieldsValue();
       if (startTime > endTime)
@@ -86,7 +117,9 @@ const ParkingLotsForm = (props: IProps) => {
           name="address"
           rules={[{ required: true, message: "Please input address!" }]}
         >
-          <TextArea rows={2} />
+          <div className="autocomplete-container">
+            <TextArea ref={inputRef} rows={2} />
+          </div>
         </Form.Item>
         {props.map}
         <Row gutter={[20, 0]}>

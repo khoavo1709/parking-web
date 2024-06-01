@@ -1,4 +1,4 @@
-import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { Col, Form, Input, Row, TimePicker, FormInstance } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +10,9 @@ interface IProps {
   parkingLot: ParkingLot | null;
   isVisible: boolean;
   map: React.ReactElement;
+  address: string;
+  setAddress: (addr: string) => void;
+  setMarker: (_: google.maps.LatLngLiteral) => void;
 }
 
 const ParkingLotsForm = (props: IProps) => {
@@ -19,19 +22,39 @@ const ParkingLotsForm = (props: IProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const inputRef = useRef<HTMLInputElement>(null);
   const places = useMapsLibrary("places");
+  const map = useMap();
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
-    console.log(place?.adr_address);
+    if (!place) return;
+    const lat = place.geometry?.location?.lat();
+    const lng = place.geometry?.location?.lng();
+
+    if (!lat || !lng) return;
+    form.setFieldValue("lat", lat);
+    form.setFieldValue("long", lng);
+    form.setFieldValue("address", place.formatted_address);
+
+    if (map && place.geometry?.viewport) {
+      map.fitBounds(place.geometry?.viewport);
+      props.setMarker({
+        lat: lat!,
+        lng: lng!,
+      });
+    }
   };
 
   useEffect(() => {
-    if (!places || !inputRef.current) {
-      console.log("im fucked");
+    if (!places) {
       return;
     }
 
-    const options = {
+    if (!places || !inputRef.current) {
+      return;
+    }
+
+    const options: google.maps.places.AutocompleteOptions = {
       fields: ["geometry", "name", "formatted_address"],
+      componentRestrictions: { country: ["vn"] },
     };
 
     setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
@@ -59,8 +82,9 @@ const ParkingLotsForm = (props: IProps) => {
         startTime: moment(tmp.startTime, "HH:mm"),
         endTime: moment(tmp.endTime, "HH:mm"),
       });
+      props.setAddress(tmp.address);
     }
-  }, [form, props.parkingLot]);
+  }, [props.parkingLot]);
 
   if (!props.isVisible) {
     return null;
@@ -84,7 +108,7 @@ const ParkingLotsForm = (props: IProps) => {
             { required: true, message: "Please input parking lot name!" },
           ]}
         >
-          <Input />
+          <Input placeholder="name" />
         </Form.Item>
         <Row gutter={[20, 0]}>
           <Col span={12}>
@@ -117,8 +141,17 @@ const ParkingLotsForm = (props: IProps) => {
           name="address"
           rules={[{ required: true, message: "Please input address!" }]}
         >
-          <div className="autocomplete-container">
-            <TextArea ref={inputRef} rows={2} />
+          <div className="autocomplete-container mr-4">
+            <input
+              value={props.address}
+              onChange={(e) => {
+                form.setFieldValue("address", e.target.value);
+                props.setAddress(e.target.value);
+              }}
+              ref={inputRef}
+              placeholder="address"
+              className="w-full h-7 rounded-md px-2 border-[0.5px] ring-0 border-[#D9D9D9] focus:border-[#2078FF] focus:outline-none"
+            />
           </div>
         </Form.Item>
         {props.map}

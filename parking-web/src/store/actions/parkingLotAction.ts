@@ -23,11 +23,11 @@ const createParkingLot = createAsyncThunk(
   "parkingLots/create",
   async (data: any, { rejectWithValue, dispatch }) => {
     try {
-      await parkingLotApi.create(data);
+      const res = await parkingLotApi.create(data);
       const companyId = localStorage.getItem("COMPANY_ID");
-      const getList = await dispatch(getAllParkingLots(companyId));
+      dispatch(getAllParkingLots(companyId));
 
-      return getList.payload;
+      return res.data.data;
     } catch (error: any) {
       if (!error.response) {
         throw error;
@@ -43,11 +43,11 @@ const updateParkingLot = createAsyncThunk(
   "parkingLots/update",
   async (data: ParkingLot, { rejectWithValue, dispatch }) => {
     try {
-      await parkingLotApi.update(data.id!, data);
+      const res = await parkingLotApi.update(data.id!, data);
       const companyId = localStorage.getItem("COMPANY_ID");
-      const getList = await dispatch(getAllParkingLots(companyId));
+      dispatch(getAllParkingLots(companyId));
 
-      return getList.payload;
+      res.data.data;
     } catch (error: any) {
       if (!error.response) {
         throw error;

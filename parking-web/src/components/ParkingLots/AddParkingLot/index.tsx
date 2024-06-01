@@ -32,6 +32,12 @@ const AddParkingLot = (props: IProps) => {
   const [current, setCurrent] = useState(0);
   const [data, setData] = useState<parkingLotData>({});
   const [parkingLot, setParkingLot] = useState<ParkingLot | null>(null);
+  const [address, setAddress] = useState("");
+  const [marker, setMarker] = useState<google.maps.LatLngLiteral>({
+    lat: 0,
+    lng: 0,
+  });
+
   const steps = [
     {
       title: `${props.parkingLotId ? "Change paring lot" : "Add parking lot"}`,
@@ -122,6 +128,7 @@ const AddParkingLot = (props: IProps) => {
         } else {
           handleUpdate();
         }
+        // dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
       }
     } catch (error) {
       // message.error(`${error}`);
@@ -178,7 +185,7 @@ const AddParkingLot = (props: IProps) => {
     }
 
     message.success("You have successfully added a new parking lot.");
-    dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
+    // dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
     setIsLoading(false);
     props.onCancel();
     reset();
@@ -273,9 +280,14 @@ const AddParkingLot = (props: IProps) => {
           parkingLot={parkingLot}
           form={lotForm}
           isVisible={current == 0}
+          address={address}
+          setAddress={setAddress}
+          setMarker={setMarker}
           map={
             <div className="w-full aspect-[2] mb-8">
               <GoogleMap
+                marker={marker}
+                setMarker={setMarker}
                 setPosition={(lat, lng) => {
                   lotForm.setFieldValue("lat", lat);
                   lotForm.setFieldValue("long", lng);
@@ -283,6 +295,7 @@ const AddParkingLot = (props: IProps) => {
                 }}
                 setAddress={(addr) => {
                   lotForm.setFieldValue("address", addr);
+                  setAddress(addr);
                   console.log(addr);
                 }}
               />

@@ -128,6 +128,7 @@ const AddParkingLot = (props: IProps) => {
         } else {
           handleUpdate();
         }
+        // dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
       }
     } catch (error) {
       // message.error(`${error}`);
@@ -184,7 +185,7 @@ const AddParkingLot = (props: IProps) => {
     }
 
     message.success("You have successfully added a new parking lot.");
-    dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
+    // dispatch(parkingLotActions.getAllParkingLots(newParkingLot.id));
     setIsLoading(false);
     props.onCancel();
     reset();

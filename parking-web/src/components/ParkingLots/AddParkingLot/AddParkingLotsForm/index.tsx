@@ -33,6 +33,7 @@ const ParkingLotsForm = (props: IProps) => {
     form.setFieldValue("lat", lat);
     form.setFieldValue("long", lng);
     form.setFieldValue("address", place.formatted_address);
+    props.setAddress(place.formatted_address!);
 
     if (map && place.geometry?.viewport) {
       map.fitBounds(place.geometry?.viewport);

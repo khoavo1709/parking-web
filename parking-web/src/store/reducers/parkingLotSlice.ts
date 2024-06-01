@@ -39,9 +39,9 @@ export const parkingLotSlice = createSlice({
       .addCase(createParkingLot.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createParkingLot.fulfilled, (state, { payload }) => {
+      .addCase(createParkingLot.fulfilled, (state) => {
         state.loading = false;
-        state.parkingLots = payload;
+        // state.parkingLots = payload;
       })
       .addCase(createParkingLot.rejected, (state, { payload }) => {
         state.loading = false;
@@ -50,9 +50,9 @@ export const parkingLotSlice = createSlice({
       .addCase(updateParkingLot.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateParkingLot.fulfilled, (state, { payload }) => {
+      .addCase(updateParkingLot.fulfilled, (state) => {
         state.loading = false;
-        state.parkingLots = payload;
+        // state.parkingLots = payload;
       })
       .addCase(updateParkingLot.rejected, (state, { payload }) => {
         state.loading = false;

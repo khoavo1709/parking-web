@@ -1,4 +1,5 @@
 import BlockDetails from "@/components/ParkingLots/BlockDetails";
+import CommentDetails from "@/components/ParkingLots/CommentDetails";
 import TimeFrameDetails from "@/components/ParkingLots/TimeFrameDetails";
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
@@ -63,6 +64,9 @@ const ParkingLotDetails = () => {
         </Col>
         <Col span={12}>
           <TimeFrameDetails idParkingLot={id ?? ""} />
+        </Col>
+        <Col span={24}>
+          <CommentDetails idParkingLot={id ?? ""} />
         </Col>
       </Row>
     </div>

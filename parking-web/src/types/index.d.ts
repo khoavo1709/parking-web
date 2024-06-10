@@ -50,3 +50,33 @@ type Company = {
   email: string;
   status: string;
 };
+
+type Reservation = {
+  id: string;
+  idVehicle: string;
+  idUser: string;
+  idParkingSlot: string;
+  idTimeFrame: string;
+  startTime: string;
+  endTime: string;
+  bookingDate: string;
+  total: string;
+  state: string;
+  parkingSlot: Slot;
+  Vehicle: Vehicle;
+  TimeFrame: TimeFrame;
+  parkingLot: ParkingLot;
+  isGoodReview?: boolean;
+  comment?: boolean;
+  user?: {
+    displayName: string;
+  };
+};
+
+type Vehicle = {
+  idVehicle: string;
+  idUser: string;
+  name: string;
+  number: string;
+  type: string;
+};

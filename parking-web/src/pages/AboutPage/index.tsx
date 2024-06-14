@@ -18,9 +18,9 @@ const AboutPage = () => {
       github: "https://github.com/dailoi280702",
     },
     {
-      name: "Minh Quang",
+      name: "Phước Bình",
       imgUrl:
-        "https://cdn.vectorstock.com/i/2000v/27/61/grunge-letter-q-vector-5262761.avif",
+        "https://cdn.vectorstock.com/i/1000v/58/25/blot-letter-b-black-and-white-vector-19805825.avif",
       title: "Software engineer",
       github: "https://github.com/",
     },
